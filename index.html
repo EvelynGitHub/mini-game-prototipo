@@ -75,7 +75,9 @@
 
         for(let index in gameObjectsList){
             let gameObject = gameObjectsList[index]
-            scene.drawImage(gameObject.img, 0, 0,
+            scene.drawImage(gameObject.img, 
+                            0, 
+                            0,
                             gameObject.width,
                             gameObject.height,
                             gameObject.x,
@@ -90,7 +92,41 @@
 
     //======= Atualiza as informações de jogo
     function update(){
-        
+
+        //limite do char
+        if (gameObjectPlayer.x < 0) {
+            gameObjectPlayer.x = 0;
+        }
+        if (gameObjectPlayer.x + gameObjectPlayer.width > gameObjectMapa.width) {
+            gameObjectPlayer.x = gameObjectMapa.width - gameObjectPlayer.width;
+        }
+        if (gameObjectPlayer.y < 0) {
+            gameObjectPlayer.y = 0;
+        }
+        if (gameObjectPlayer.y + gameObjectPlayer.height > gameObjectMapa.height) {
+            gameObjectPlayer.y = gameObjectMapa.height - gameObjectPlayer.height;
+        }
+
+
+        if(gameObjectPlayer.x < objectCamera.leftEdge()){
+            objectCamera.x = char.x - (objectCamera.width * 0.25);
+            console.log("limite esquerdo da camera")
+        }
+        if (gameObjectPlayer.x + gameObjectPlayer.width > objectCamera.rightEdge()) {
+            objectCamera.x = gameObjectPlayer.x + gameObjectPlayer.width - (objectCamera.width * 0.75);
+            console.log("limite direito da camera")
+        }
+        if (gameObjectPlayer.y < objectCamera.topEdge()) {
+            objectCamera.y = gameObjectPlayer.y - (objectCamera.height * 0.25);
+            console.log("limite superior da camera")
+        }
+        if (gameObjectPlayer.y + gameObjectPlayer.height > objectCamera.bottomEdge()) {
+            objectCamera.y = gameObjectPlayer.y + gameObjectPlayer.height - (objectCamera.height * 0.75);
+            console.log("limite inferior da camera")
+        }
+
+
+        console.log(gameObjectPlayer.x)
     }
     
 
@@ -103,14 +139,16 @@
     loop()
 
     document.addEventListener("keydown", function(e){
-        console.log(e)
+        // console.log(e)
 
         let actionClick = {
             ArrowDown(){
                 gameObjectPlayer.y += gameObjectPlayer.speed
+                // gameObjectPlayer.y = gameObjectPlayer.height * 3 
             },
             ArrowUp(){
                 gameObjectPlayer.y -= gameObjectPlayer.speed
+                // gameObjectPlayer.y = gameObjectPlayer.height * 2
             },
             ArrowLeft(){
                 gameObjectPlayer.x -= gameObjectPlayer.speed
