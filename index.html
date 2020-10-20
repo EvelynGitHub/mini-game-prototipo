@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniGame</title>
+</head>
+<body>
+    <h1>MiniGamePrototipo</h1>
+    <canvas id="canvas"></canvas>
+
+
+
+    <script>
+    let canvas = document.getElementeById("canvas")
+    let scene = canvas.getContext("2d")
+
+
+    //====== Elementos do jogo =========
+    let mapa = new Image()
+    mapa.src = "./img/scene.png"
+
+    let player = new Image()
+    player.src = "./img/img.png"
+    //=================================
+
+    // ======= Objetos do Jogo ========
+    let gameObjectsList = []
+
+    let gameObjectMapa = {
+        img: mapa,
+        x:0,
+        y:0,
+        //Altura e lagura da imagem mapa
+        width: 800,
+        height: 600
+    };
+
+    let gameObjectPlayer = {
+        img: player,
+        x:0,
+        y:0,
+        width: 34,
+        height: 50
+    };
+
+    gameObjectsList.push(gameObjectMapa)
+    gameObjectsList.push(gameObjectPlayer)
+
+    let objectCamera = {
+		x: 0,
+		y: 0,
+		width: scene.width,
+		height: scene.height,
+		leftEdge: function(){
+			return this.x + (this.width * 0.25);
+		},
+		rightEdge: function(){
+			return this.x + (this.width * 0.75);
+		},
+		topEdge: function(){
+			return this.y + (this.height * 0.25);
+		},
+		bottomEdge: function(){
+			return this.y + (this.height * 0.75);
+		}
+	};
+    // ============================================
+
+    // ====== Rederiza os elementos do jogo =======
+    function render(){
+        
+        for(let index in gameObjectsList){
+            let gameObject = gameObjectsList[index]
+            scene.drawImage(gameObject.img, 0, 0,
+                            gameObject.width,
+                            gameObject.height,
+                            gameObject.x,
+                            gameObject.y,
+                            gameObject.width,
+                            gameObject.height)
+        }
+
+    }
+
+
+    </script>
+</body>
+</html>
