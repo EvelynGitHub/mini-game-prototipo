@@ -7,21 +7,22 @@
 </head>
 <body>
     <h1>MiniGamePrototipo</h1>
-    <canvas id="canvas"></canvas>
-
+    <hr>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <hr>
 
 
     <script>
-    let canvas = document.getElementeById("canvas")
+    let canvas = document.getElementById("canvas")
     let scene = canvas.getContext("2d")
 
 
     //====== Elementos do jogo =========
     let mapa = new Image()
-    mapa.src = "./img/scene.png"
+    mapa.src = "img/scene.png"
 
     let player = new Image()
-    player.src = "./img/img.png"
+    player.src = "img/img.png"
     //=================================
 
     // ======= Objetos do Jogo ========
@@ -40,8 +41,9 @@
         img: player,
         x:0,
         y:0,
-        width: 34,
-        height: 50
+        width: 24,
+        height: 31,
+        speed: 2
     };
 
     gameObjectsList.push(gameObjectMapa)
@@ -67,9 +69,10 @@
 	};
     // ============================================
 
-    // ====== Rederiza os elementos do jogo =======
+    // ====== Renderiza os elementos do jogo =======
     function render(){
-        
+        // scene.save()
+
         for(let index in gameObjectsList){
             let gameObject = gameObjectsList[index]
             scene.drawImage(gameObject.img, 0, 0,
@@ -81,9 +84,47 @@
                             gameObject.height)
         }
 
+        // scene.retore()
+
     }
 
+    //======= Atualiza as informações de jogo
+    function update(){
+        
+    }
+    
 
+    function loop(){
+        window.requestAnimationFrame(loop, scene);
+        render()
+        update()
+    }
+
+    loop()
+
+    document.addEventListener("keydown", function(e){
+        console.log(e)
+
+        let actionClick = {
+            ArrowDown(){
+                gameObjectPlayer.y += gameObjectPlayer.speed
+            },
+            ArrowUp(){
+                gameObjectPlayer.y -= gameObjectPlayer.speed
+            },
+            ArrowLeft(){
+                gameObjectPlayer.x -= gameObjectPlayer.speed
+            },
+            ArrowRight(){
+                gameObjectPlayer.x += gameObjectPlayer.speed
+            }
+        }
+
+        actionClick[e.key]()
+
+        console.log("Foi (): "+e.key)
+        
+    })
     </script>
 </body>
 </html>
