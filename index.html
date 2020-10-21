@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+canvas{
+    background: red;
+}
+</style>
+
     <title>MiniGame</title>
 </head>
 <body>
@@ -34,7 +42,9 @@
         y:0,
         //Altura e lagura da imagem mapa
         width: 800,
-        height: 600
+        height: 600,
+        originX : 0,
+        originY: 0
     };
 
     let gameObjectPlayer = {
@@ -42,8 +52,10 @@
         x:0,
         y:0,
         width: 24,
-        height: 31,
-        speed: 2
+        height: 32,
+        speed: 1,
+        originX : 0,
+        originY: 0
     };
 
     gameObjectsList.push(gameObjectMapa)
@@ -52,8 +64,8 @@
     let objectCamera = {
 		x: 0,
 		y: 0,
-		width: scene.width,
-		height: scene.height,
+		width: canvas.width,
+		height: canvas.height,
 		leftEdge: function(){
 			return this.x + (this.width * 0.25);
 		},
@@ -71,34 +83,39 @@
 
     // ====== Renderiza os elementos do jogo =======
     function render(){
-        // scene.save()
+
+        scene.save()
+        scene.translate(-objectCamera.x, -objectCamera.y)
 
         for(let index in gameObjectsList){
             let gameObject = gameObjectsList[index]
-            scene.drawImage(gameObject.img, 
-                            0, 
-                            0,
-                            gameObject.width,
-                            gameObject.height,
-                            gameObject.x,
-                            gameObject.y,
-                            gameObject.width,
-                            gameObject.height)
+            scene.drawImage(gameObject.img,     //Imagem de origem
+                            //Captura da imagem
+                            gameObject.originX, //Origem da captura no eixo X
+                            gameObject.originY, //Origem da captura no eixo Y
+                            gameObject.width,   //Largura da imagem que será capturada
+                            gameObject.height,  //Altura da imagem que será capturada
+                            //Exibição da imagem
+                            gameObject.x,       //Posição no eixo X onde a imagem será exibida
+                            gameObject.y,       //Posição no eixo Y onde a imagem será exibida
+                            gameObject.width,	//Largura da imagem a ser exibida 
+                            gameObject.height)  //Altura da imagem a ser exibida 
         }
 
-        // scene.retore()
+        scene.restore()
 
     }
 
     //======= Atualiza as informações de jogo
     function update(){
 
-        //limite do char
+        // //limite do char
         if (gameObjectPlayer.x < 0) {
             gameObjectPlayer.x = 0;
         }
         if (gameObjectPlayer.x + gameObjectPlayer.width > gameObjectMapa.width) {
             gameObjectPlayer.x = gameObjectMapa.width - gameObjectPlayer.width;
+
         }
         if (gameObjectPlayer.y < 0) {
             gameObjectPlayer.y = 0;
@@ -109,24 +126,36 @@
 
 
         if(gameObjectPlayer.x < objectCamera.leftEdge()){
-            objectCamera.x = char.x - (objectCamera.width * 0.25);
-            console.log("limite esquerdo da camera")
-        }
+            objectCamera.x = gameObjectPlayer.x - (objectCamera.width * 0.25);
+       }
         if (gameObjectPlayer.x + gameObjectPlayer.width > objectCamera.rightEdge()) {
             objectCamera.x = gameObjectPlayer.x + gameObjectPlayer.width - (objectCamera.width * 0.75);
-            console.log("limite direito da camera")
+           
         }
         if (gameObjectPlayer.y < objectCamera.topEdge()) {
             objectCamera.y = gameObjectPlayer.y - (objectCamera.height * 0.25);
-            console.log("limite superior da camera")
+            
         }
         if (gameObjectPlayer.y + gameObjectPlayer.height > objectCamera.bottomEdge()) {
             objectCamera.y = gameObjectPlayer.y + gameObjectPlayer.height - (objectCamera.height * 0.75);
-            console.log("limite inferior da camera")
+            
         }
 
 
-        console.log(gameObjectPlayer.x)
+        //limite da câmera
+        if (objectCamera.x < 0) {
+            objectCamera.x = 0;
+        }
+        if (objectCamera.x + objectCamera.width > gameObjectMapa.width) {
+            objectCamera.x = gameObjectMapa.width - objectCamera.width;
+        }
+        if (objectCamera.y < 0) {
+            objectCamera.y = 0;
+        }
+        if (objectCamera.y + objectCamera.height > gameObjectMapa.height) {
+            objectCamera.y = gameObjectMapa.height - objectCamera.height;
+        }
+
     }
     
 
@@ -136,31 +165,39 @@
         update()
     }
 
-    loop()
 
-    document.addEventListener("keydown", function(e){
+    loop()
+let contador = 0
+    window.addEventListener("keydown", function(e){
         // console.log(e)
 
         let actionClick = {
             ArrowDown(){
                 gameObjectPlayer.y += gameObjectPlayer.speed
-                // gameObjectPlayer.y = gameObjectPlayer.height * 3 
+                gameObjectPlayer.originY = gameObjectPlayer.height * 0 
             },
             ArrowUp(){
                 gameObjectPlayer.y -= gameObjectPlayer.speed
-                // gameObjectPlayer.y = gameObjectPlayer.height * 2
+                gameObjectPlayer.originY = gameObjectPlayer.height * 1
             },
             ArrowLeft(){
                 gameObjectPlayer.x -= gameObjectPlayer.speed
+                gameObjectPlayer.originY = gameObjectPlayer.height * 2
             },
             ArrowRight(){
                 gameObjectPlayer.x += gameObjectPlayer.speed
+                gameObjectPlayer.originY = gameObjectPlayer.height * 3
             }
         }
 
-        actionClick[e.key]()
+        //=========== anima ===========
+        contador++
+        if(contador >= 40){
+            contador = 0;
+        }
+        gameObjectPlayer.originX = Math.floor(contador / 5) * gameObjectPlayer.width
 
-        console.log("Foi (): "+e.key)
+        actionClick[e.key]()
         
     })
     </script>
