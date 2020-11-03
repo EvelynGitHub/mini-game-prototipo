@@ -53,7 +53,7 @@ canvas{
         y:0,
         width: 24,
         height: 32,
-        speed: 2,
+        speed: 4,
         originX : 0,
         originY: 0
     };
@@ -108,19 +108,18 @@ canvas{
 
     //======= Atualiza as informações de jogo
     function update(){
-
         // //limite do char
         if (gameObjectPlayer.x < 0) {
             gameObjectPlayer.x = 0;
         }
-        if (gameObjectPlayer.x + gameObjectPlayer.width > gameObjectMapa.width) {
+        else if (gameObjectPlayer.x + gameObjectPlayer.width > gameObjectMapa.width) {
             gameObjectPlayer.x = gameObjectMapa.width - gameObjectPlayer.width;
 
         }
         if (gameObjectPlayer.y < 0) {
             gameObjectPlayer.y = 0;
         }
-        if (gameObjectPlayer.y + gameObjectPlayer.height > gameObjectMapa.height) {
+        else if (gameObjectPlayer.y + gameObjectPlayer.height > gameObjectMapa.height) {
             gameObjectPlayer.y = gameObjectMapa.height - gameObjectPlayer.height;
         }
 
@@ -161,8 +160,8 @@ canvas{
 
     function loop(){
         window.requestAnimationFrame(loop, scene);
-        render()
         update()
+        render()
     }
 
 
